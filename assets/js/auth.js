@@ -197,3 +197,104 @@ if(registerForm){
     });
 
 }
+/* ===================================
+   Firebase Login
+=================================== */
+
+if(loginForm){
+
+    loginForm.addEventListener("submit", async (event)=>{
+
+        event.preventDefault();
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            passwordInput.value;
+
+        if(!isValidEmail(email)){
+
+            PayNest.showToast(
+                "รูปแบบอีเมลไม่ถูกต้อง",
+                "danger"
+            );
+
+            return;
+
+        }
+
+        if(password.length < 6){
+
+            PayNest.showToast(
+                "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+                "warning"
+            );
+
+            return;
+
+        }
+
+        try{
+
+            await auth.signInWithEmailAndPassword(
+
+                email,
+
+                password
+
+            );
+
+            const remember =
+                document.getElementById("remember");
+
+            if(remember && remember.checked){
+
+                localStorage.setItem(
+
+                    "paynest-email",
+
+                    email
+
+                );
+
+            }else{
+
+                localStorage.removeItem(
+
+                    "paynest-email"
+
+                );
+
+            }
+
+            PayNest.showToast(
+
+                "เข้าสู่ระบบสำเร็จ",
+
+                "success"
+
+            );
+
+            setTimeout(()=>{
+
+                location.href =
+                    "dashboard.html";
+
+            },800);
+
+        }catch(error){
+
+            PayNest.showToast(
+
+                error.message,
+
+                "danger"
+
+            );
+
+        }
+
+    });
+
+}
