@@ -36,8 +36,39 @@ if(togglePassword && passwordInput){
 
 }
 
+
 /* ===================================
-   Login
+   Remember Me
+=================================== */
+
+const remember = document.getElementById("remember");
+
+if(remember){
+
+    const savedEmail = localStorage.getItem("paynest-email");
+
+    if(savedEmail){
+
+        document.getElementById("email").value = savedEmail;
+
+        remember.checked = true;
+
+    }
+
+}
+
+/* ===================================
+   Email Validation
+=================================== */
+
+function isValidEmail(email){
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+}
+
+/* ===================================
+   Login Submit
 =================================== */
 
 if(loginForm){
@@ -54,11 +85,25 @@ if(loginForm){
 
             passwordInput.value.trim();
 
-        if(!email || !password){
+        if(!isValidEmail(email)){
 
             PayNest.showToast(
 
-                "กรุณากรอกข้อมูลให้ครบ",
+                "รูปแบบอีเมลไม่ถูกต้อง",
+
+                "danger"
+
+            );
+
+            return;
+
+        }
+
+        if(password.length < 6){
+
+            PayNest.showToast(
+
+                "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
 
                 "warning"
 
@@ -68,13 +113,36 @@ if(loginForm){
 
         }
 
+        if(remember.checked){
+
+            localStorage.setItem(
+
+                "paynest-email",
+
+                email
+
+            );
+
+        }else{
+
+            localStorage.removeItem(
+
+                "paynest-email"
+
+            );
+
+        }
+
         PayNest.showToast(
 
-            "เข้าสู่ระบบสำเร็จ (Demo)",
+            "กำลังเข้าสู่ระบบ...",
 
-            "success"
+            "primary"
 
         );
+
+        /* Firebase Login
+           จะเพิ่มในขั้นถัดไป */
 
     });
 
