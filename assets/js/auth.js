@@ -298,3 +298,55 @@ if(loginForm){
     });
 
 }
+/* ===================================
+   Auth State
+=================================== */
+
+auth.onAuthStateChanged((user)=>{
+
+    if(user){
+
+        console.log(
+
+            "Login:",
+
+            user.email
+
+        );
+
+    }else{
+
+        console.log(
+
+            "Not Login"
+
+        );
+
+    }
+
+});
+/* ===================================
+   Logout
+=================================== */
+
+async function logout(){
+
+    try{
+
+        await auth.signOut();
+
+        location.href = "login.html";
+
+    }catch(error){
+
+        PayNest.showToast(
+
+            error.message,
+
+            "danger"
+
+        );
+
+    }
+
+}
