@@ -81,6 +81,11 @@
     style="
         padding-top:110px;
         padding-bottom:40px;
+</section>
+
+</main>
+
+<!-- Back To Top -->
     ">
 
 <div class="container">
@@ -329,11 +334,13 @@
 
     <div class="modal-content">
 
-        <h2 class="mb-2">
+        <h2
+    id="transactionTitle"
+    class="mb-2">
 
-            เพิ่มรายการ
+    เพิ่มรายการ
 
-        </h2>
+</h2>
 
         <form id="transactionForm">
 
@@ -405,10 +412,11 @@
 
                 </label>
 
-                <input
-                    type="date"
-                    id="date"
-                    class="form-input">
+               <input
+    type="date"
+    id="date"
+    class="form-input"
+    required>
 
             </div>
 
@@ -443,7 +451,25 @@
     </div>
 
 </div>
+<button
 
+    id="floatingAdd"
+
+    class="btn-primary"
+
+    style="
+        position:fixed;
+        right:25px;
+        bottom:95px;
+        width:60px;
+        height:60px;
+        border-radius:50%;
+        z-index:900;
+    ">
+
+    <i class="fa-solid fa-plus"></i>
+
+</button>
 <!-- Back To Top -->
 
 <button id="backToTop"
