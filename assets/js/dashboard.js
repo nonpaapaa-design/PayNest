@@ -381,3 +381,85 @@ if(searchInput){
     });
 
 }
+/* ===================================
+   Chart
+=================================== */
+
+let financeChart = null;
+
+function renderChart(){
+
+    const canvas = document.getElementById("financeChart");
+
+    if(!canvas) return;
+
+    let income = 0;
+
+    let expense = 0;
+
+    transactions.forEach(item=>{
+
+        if(item.type === "income"){
+
+            income += Number(item.amount);
+
+        }else{
+
+            expense += Number(item.amount);
+
+        }
+
+    });
+
+    if(financeChart){
+
+        financeChart.destroy();
+
+    }
+
+    financeChart = new Chart(canvas,{
+
+        type:"doughnut",
+
+        data:{
+
+            labels:[
+                "รายรับ",
+                "รายจ่าย"
+            ],
+
+            datasets:[{
+
+                data:[
+                    income,
+                    expense
+                ],
+
+                backgroundColor:[
+                    "#10b981",
+                    "#ef4444"
+                ]
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            plugins:{
+
+                legend:{
+
+                    position:"bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
