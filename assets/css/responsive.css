@@ -382,3 +382,12 @@
     }
 
 }
+@media (max-width:576px){
+
+    .auth-card{
+
+        padding:24px;
+
+    }
+
+}
