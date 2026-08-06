@@ -1,17 +1,17 @@
 "use strict";
 
 /* ===================================
-   Elements
+   PayNest Premium
+   Firebase Authentication
 =================================== */
 
-const loginForm =
-    document.getElementById("loginForm");
+/* ---------- Elements ---------- */
 
-const registerForm =
-    document.getElementById("registerForm");
+const loginForm = document.getElementById("loginForm");
 
-const passwordInput =
-    document.getElementById("password");
+const registerForm = document.getElementById("registerForm");
+
+const passwordInput = document.getElementById("password");
 
 const confirmPasswordInput =
     document.getElementById("confirmPassword");
@@ -22,66 +22,88 @@ const togglePassword =
 const toggleConfirmPassword =
     document.getElementById("toggleConfirmPassword");
 
-/* ===================================
-   Toggle Password
-=================================== */
+/* ---------- Toggle Password ---------- */
 
-if(togglePassword && passwordInput){
+function toggleInput(input, button){
 
-    togglePassword.onclick = ()=>{
+    if(!input || !button) return;
 
-        const show =
-            passwordInput.type === "password";
+    const show = input.type === "password";
 
-        passwordInput.type =
-            show ? "text" : "password";
+    input.type = show ? "text" : "password";
 
-        togglePassword.innerHTML =
-            show
-            ? '<i class="fa-solid fa-eye-slash"></i>'
-            : '<i class="fa-solid fa-eye"></i>';
-
-    };
+    button.innerHTML = show
+        ? '<i class="fa-solid fa-eye-slash"></i>'
+        : '<i class="fa-solid fa-eye"></i>';
 
 }
 
-if(toggleConfirmPassword && confirmPasswordInput){
+if(togglePassword){
 
-    toggleConfirmPassword.onclick = ()=>{
+    togglePassword.addEventListener("click",()=>{
 
-        const show =
-            confirmPasswordInput.type === "password";
+        toggleInput(passwordInput,togglePassword);
 
-        confirmPasswordInput.type =
-            show ? "text" : "password";
-
-        toggleConfirmPassword.innerHTML =
-            show
-            ? '<i class="fa-solid fa-eye-slash"></i>'
-            : '<i class="fa-solid fa-eye"></i>';
-
-    };
+    });
 
 }
 
-/* ===================================
-   Validation
-=================================== */
+if(toggleConfirmPassword){
+
+    toggleConfirmPassword.addEventListener("click",()=>{
+
+        toggleInput(
+
+            confirmPasswordInput,
+
+            toggleConfirmPassword
+
+        );
+
+    });
+
+}
+
+/* ---------- Validation ---------- */
 
 function isValidEmail(email){
 
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 }
+
+function showError(message){
+
+    PayNest.showToast(
+
+        message,
+
+        "danger"
+
+    );
+
+}
+
+function showSuccess(message){
+
+    PayNest.showToast(
+
+        message,
+
+        "success"
+
+    );
+
+}
 /* ===================================
-   Register Firebase
+   Register
 =================================== */
 
 if(registerForm){
 
-    registerForm.addEventListener("submit", async (event)=>{
+    registerForm.addEventListener("submit", async (e)=>{
 
-        event.preventDefault();
+        e.preventDefault();
 
         const fullname =
             document.getElementById("fullname").value.trim();
@@ -97,45 +119,25 @@ if(registerForm){
 
         if(fullname.length < 2){
 
-            PayNest.showToast(
-                "กรุณากรอกชื่อ-นามสกุล",
-                "warning"
-            );
-
-            return;
+            return showError("กรุณากรอกชื่อ-นามสกุล");
 
         }
 
         if(!isValidEmail(email)){
 
-            PayNest.showToast(
-                "รูปแบบอีเมลไม่ถูกต้อง",
-                "danger"
-            );
-
-            return;
+            return showError("รูปแบบอีเมลไม่ถูกต้อง");
 
         }
 
         if(password.length < 6){
 
-            PayNest.showToast(
-                "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
-                "warning"
-            );
-
-            return;
+            return showError("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
 
         }
 
         if(password !== confirmPassword){
 
-            PayNest.showToast(
-                "รหัสผ่านไม่ตรงกัน",
-                "danger"
-            );
-
-            return;
+            return showError("รหัสผ่านไม่ตรงกัน");
 
         }
 
@@ -161,51 +163,37 @@ if(registerForm){
                     email,
 
                     createdAt:
-
                         firebase.firestore.FieldValue.serverTimestamp()
 
                 });
 
-            PayNest.showToast(
-
-                "สมัครสมาชิกสำเร็จ",
-
-                "success"
-
-            );
+            showSuccess("สมัครสมาชิกสำเร็จ");
 
             setTimeout(()=>{
 
-                location.href =
-
-                    "dashboard.html";
+                location.href = "dashboard.html";
 
             },1000);
 
         }catch(error){
 
-            PayNest.showToast(
-
-                error.message,
-
-                "danger"
-
-            );
+            showError(error.message);
 
         }
 
     });
 
 }
+
 /* ===================================
-   Firebase Login
+   Login
 =================================== */
 
 if(loginForm){
 
-    loginForm.addEventListener("submit", async (event)=>{
+    loginForm.addEventListener("submit", async (e)=>{
 
-        event.preventDefault();
+        e.preventDefault();
 
         const email =
             document.getElementById("email").value.trim();
@@ -215,23 +203,13 @@ if(loginForm){
 
         if(!isValidEmail(email)){
 
-            PayNest.showToast(
-                "รูปแบบอีเมลไม่ถูกต้อง",
-                "danger"
-            );
-
-            return;
+            return showError("รูปแบบอีเมลไม่ถูกต้อง");
 
         }
 
         if(password.length < 6){
 
-            PayNest.showToast(
-                "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
-                "warning"
-            );
-
-            return;
+            return showError("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
 
         }
 
@@ -248,7 +226,7 @@ if(loginForm){
             const remember =
                 document.getElementById("remember");
 
-            if(remember && remember.checked){
+            if(remember?.checked){
 
                 localStorage.setItem(
 
@@ -268,30 +246,17 @@ if(loginForm){
 
             }
 
-            PayNest.showToast(
-
-                "เข้าสู่ระบบสำเร็จ",
-
-                "success"
-
-            );
+            showSuccess("เข้าสู่ระบบสำเร็จ");
 
             setTimeout(()=>{
 
-                location.href =
-                    "dashboard.html";
+                location.href = "dashboard.html";
 
             },800);
 
         }catch(error){
 
-            PayNest.showToast(
-
-                error.message,
-
-                "danger"
-
-            );
+            showError(firebaseError(error));
 
         }
 
@@ -299,32 +264,67 @@ if(loginForm){
 
 }
 /* ===================================
-   Auth State
+   Firebase Error (Thai)
 =================================== */
 
-auth.onAuthStateChanged((user)=>{
+function firebaseError(error){
 
-    if(user){
+    switch(error.code){
 
-        console.log(
+        case "auth/email-already-in-use":
+            return "อีเมลนี้ถูกใช้งานแล้ว";
 
-            "Login:",
+        case "auth/invalid-email":
+            return "รูปแบบอีเมลไม่ถูกต้อง";
 
-            user.email
+        case "auth/user-not-found":
+            return "ไม่พบบัญชีผู้ใช้";
 
-        );
+        case "auth/wrong-password":
+            return "รหัสผ่านไม่ถูกต้อง";
 
-    }else{
+        case "auth/invalid-credential":
+            return "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
 
-        console.log(
+        case "auth/weak-password":
+            return "รหัสผ่านสั้นเกินไป";
 
-            "Not Login"
+        case "auth/too-many-requests":
+            return "มีการพยายามเข้าสู่ระบบหลายครั้ง กรุณาลองใหม่ภายหลัง";
 
-        );
+        default:
+            return error.message;
 
     }
 
-});
+}
+
+/* ===================================
+   Forgot Password
+=================================== */
+
+async function resetPassword(email){
+
+    if(!isValidEmail(email)){
+
+        return showError("กรุณากรอกอีเมลให้ถูกต้อง");
+
+    }
+
+    try{
+
+        await auth.sendPasswordResetEmail(email);
+
+        showSuccess("ส่งลิงก์รีเซ็ตรหัสผ่านแล้ว");
+
+    }catch(error){
+
+        showError(firebaseError(error));
+
+    }
+
+}
+
 /* ===================================
    Logout
 =================================== */
@@ -339,14 +339,56 @@ async function logout(){
 
     }catch(error){
 
-        PayNest.showToast(
-
-            error.message,
-
-            "danger"
-
-        );
+        showError(firebaseError(error));
 
     }
 
 }
+
+/* ===================================
+   Auth State
+=================================== */
+
+auth.onAuthStateChanged((user)=>{
+
+    if(user){
+
+        console.log("Login :",user.email);
+
+    }else{
+
+        console.log("Guest");
+
+    }
+
+});
+
+/* ===================================
+   Remember Me
+=================================== */
+
+const remember = document.getElementById("remember");
+
+const emailInput = document.getElementById("email");
+
+if(remember && emailInput){
+
+    const saved = localStorage.getItem("paynest-email");
+
+    if(saved){
+
+        emailInput.value = saved;
+
+        remember.checked = true;
+
+    }
+
+}
+
+/* ===================================
+   Global
+=================================== */
+
+window.logout = logout;
+
+window.resetPassword = resetPassword;
