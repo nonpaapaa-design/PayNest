@@ -1,14 +1,26 @@
 "use strict";
 
 /* ===================================
-   Auth
+   Elements
 =================================== */
 
-const loginForm = document.getElementById("loginForm");
+const loginForm =
+    document.getElementById("loginForm");
 
-const passwordInput = document.getElementById("password");
+const registerForm =
+    document.getElementById("registerForm");
 
-const togglePassword = document.getElementById("togglePassword");
+const passwordInput =
+    document.getElementById("password");
+
+const confirmPasswordInput =
+    document.getElementById("confirmPassword");
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+const toggleConfirmPassword =
+    document.getElementById("toggleConfirmPassword");
 
 /* ===================================
    Toggle Password
@@ -16,49 +28,44 @@ const togglePassword = document.getElementById("togglePassword");
 
 if(togglePassword && passwordInput){
 
-    togglePassword.addEventListener("click",()=>{
+    togglePassword.onclick = ()=>{
 
-        const isPassword =
-
+        const show =
             passwordInput.type === "password";
 
         passwordInput.type =
+            show ? "text" : "password";
 
-            isPassword ? "text" : "password";
-
-        togglePassword.innerHTML = isPassword
-
+        togglePassword.innerHTML =
+            show
             ? '<i class="fa-solid fa-eye-slash"></i>'
-
             : '<i class="fa-solid fa-eye"></i>';
 
-    });
+    };
 
 }
 
+if(toggleConfirmPassword && confirmPasswordInput){
 
-/* ===================================
-   Remember Me
-=================================== */
+    toggleConfirmPassword.onclick = ()=>{
 
-const remember = document.getElementById("remember");
+        const show =
+            confirmPasswordInput.type === "password";
 
-if(remember){
+        confirmPasswordInput.type =
+            show ? "text" : "password";
 
-    const savedEmail = localStorage.getItem("paynest-email");
+        toggleConfirmPassword.innerHTML =
+            show
+            ? '<i class="fa-solid fa-eye-slash"></i>'
+            : '<i class="fa-solid fa-eye"></i>';
 
-    if(savedEmail){
-
-        document.getElementById("email").value = savedEmail;
-
-        remember.checked = true;
-
-    }
+    };
 
 }
 
 /* ===================================
-   Email Validation
+   Validation
 =================================== */
 
 function isValidEmail(email){
@@ -66,124 +73,13 @@ function isValidEmail(email){
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 }
-
 /* ===================================
-   Login Submit
+   Register Firebase
 =================================== */
-
-if(loginForm){
-
-    loginForm.addEventListener("submit",(event)=>{
-
-        event.preventDefault();
-
-        const email =
-
-            document.getElementById("email").value.trim();
-
-        const password =
-
-            passwordInput.value.trim();
-
-        if(!isValidEmail(email)){
-
-            PayNest.showToast(
-
-                "รูปแบบอีเมลไม่ถูกต้อง",
-
-                "danger"
-
-            );
-
-            return;
-
-        }
-
-        if(password.length < 6){
-
-            PayNest.showToast(
-
-                "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
-
-                "warning"
-
-            );
-
-            return;
-
-        }
-
-        if(remember.checked){
-
-            localStorage.setItem(
-
-                "paynest-email",
-
-                email
-
-            );
-
-        }else{
-
-            localStorage.removeItem(
-
-                "paynest-email"
-
-            );
-
-        }
-
-        PayNest.showToast(
-
-            "กำลังเข้าสู่ระบบ...",
-
-            "primary"
-
-        );
-
-        /* Firebase Login
-           จะเพิ่มในขั้นถัดไป */
-
-    });
-
-}
-/* ===================================
-   Register
-=================================== */
-
-const registerForm = document.getElementById("registerForm");
-
-const confirmPasswordInput =
-    document.getElementById("confirmPassword");
-
-const toggleConfirmPassword =
-    document.getElementById("toggleConfirmPassword");
-
-/* ---------- Toggle Confirm Password ---------- */
-
-if(toggleConfirmPassword && confirmPasswordInput){
-
-    toggleConfirmPassword.addEventListener("click",()=>{
-
-        const isPassword =
-            confirmPasswordInput.type === "password";
-
-        confirmPasswordInput.type =
-            isPassword ? "text" : "password";
-
-        toggleConfirmPassword.innerHTML = isPassword
-            ? '<i class="fa-solid fa-eye-slash"></i>'
-            : '<i class="fa-solid fa-eye"></i>';
-
-    });
-
-}
-
-/* ---------- Register Submit ---------- */
 
 if(registerForm){
 
-    registerForm.addEventListener("submit",(event)=>{
+    registerForm.addEventListener("submit", async (event)=>{
 
         event.preventDefault();
 
@@ -194,7 +90,7 @@ if(registerForm){
             document.getElementById("email").value.trim();
 
         const password =
-            document.getElementById("password").value;
+            passwordInput.value;
 
         const confirmPassword =
             confirmPasswordInput.value;
@@ -243,10 +139,60 @@ if(registerForm){
 
         }
 
-        PayNest.showToast(
-            "ข้อมูลถูกต้อง พร้อมเชื่อม Firebase",
-            "success"
-        );
+        try{
+
+            const userCredential =
+
+                await auth.createUserWithEmailAndPassword(
+
+                    email,
+
+                    password
+
+                );
+
+            await db
+                .collection("users")
+                .doc(userCredential.user.uid)
+                .set({
+
+                    fullname,
+
+                    email,
+
+                    createdAt:
+
+                        firebase.firestore.FieldValue.serverTimestamp()
+
+                });
+
+            PayNest.showToast(
+
+                "สมัครสมาชิกสำเร็จ",
+
+                "success"
+
+            );
+
+            setTimeout(()=>{
+
+                location.href =
+
+                    "dashboard.html";
+
+            },1000);
+
+        }catch(error){
+
+            PayNest.showToast(
+
+                error.message,
+
+                "danger"
+
+            );
+
+        }
 
     });
 
