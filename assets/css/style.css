@@ -1,0 +1,130 @@
+/* ===================================
+   PayNest Premium
+   Main Styles
+=================================== */
+
+/* ---------- Google Font ---------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+/* ---------- Reset ---------- */
+
+*,
+*::before,
+*::after{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+/* ---------- HTML ---------- */
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+/* ---------- Body ---------- */
+
+body{
+
+    font-family:var(--font-family);
+
+    font-size:var(--font-md);
+
+    font-weight:var(--font-normal);
+
+    background:var(--background);
+
+    color:var(--text);
+
+    line-height:1.6;
+
+    overflow-x:hidden;
+
+}
+
+/* ---------- Selection ---------- */
+
+::selection{
+
+    background:var(--primary);
+
+    color:#fff;
+
+}
+
+/* ---------- Images ---------- */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+/* ---------- Links ---------- */
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+/* ---------- List ---------- */
+
+ul{
+
+    list-style:none;
+
+}
+
+/* ---------- Button ---------- */
+
+button{
+
+    border:none;
+
+    outline:none;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+}
+
+/* ---------- Input ---------- */
+
+input,
+textarea,
+select{
+
+    font-family:inherit;
+
+    outline:none;
+
+}
+
+/* ---------- Container ---------- */
+
+.container{
+
+    width:min(100% - 32px,var(--container));
+
+    margin-inline:auto;
+
+}
+
+/* ---------- Section ---------- */
+
+section{
+
+    padding:80px 0;
+
+}
