@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | PayNest Premium</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="assets/css/variables.css">
+
+    <link rel="stylesheet"
+          href="assets/css/style.css">
+
+    <link rel="stylesheet"
+          href="assets/css/components.css">
+
+    <link rel="stylesheet"
+          href="assets/css/responsive.css">
+
+</head>
+
+<body>
+
+<div id="loader"></div>
+
+<header class="header">
+
+    <div class="container">
+
+        <a href="#" class="logo">
+
+            PayNest <span>Premium</span>
+
+        </a>
+
+        <nav>
+
+            <a href="#" class="active">
+
+                Dashboard
+
+            </a>
+
+            <a href="#">
+
+                รายการ
+
+            </a>
+
+            <a href="#">
+
+                รายงาน
+
+            </a>
+
+            <button
+                class="btn"
+                onclick="logout()">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                ออกจากระบบ
+
+            </button>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<main
+    style="
+        padding-top:110px;
+        padding-bottom:40px;
+    ">
+
+<div class="container">
+
+<h2 class="mb-3">
+
+    ยินดีต้อนรับ
+
+</h2>
+
+<div class="features-grid">
+
+<div class="stat-card">
+
+<div class="info">
+
+<span>
+
+รายรับทั้งหมด
+
+</span>
+
+<h2 id="incomeTotal">
+
+฿0.00
+
+</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fa-solid fa-wallet"></i>
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="info">
+
+<span>
+
+รายจ่ายทั้งหมด
+
+</span>
+
+<h2 id="expenseTotal">
+
+฿0.00
+
+</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fa-solid fa-money-bill-wave"></i>
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="info">
+
+<span>
+
+ยอดคงเหลือ
+
+</span>
+
+<h2 id="balanceTotal">
+
+฿0.00
+
+</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fa-solid fa-piggy-bank"></i>
+
+</div>
+
+</div>
+
+</div>
+<!-- Quick Actions -->
+
+<section class="mt-3">
+
+    <div class="features-grid">
+
+        <div class="dashboard-card">
+
+            <h3>
+
+                <i class="fa-solid fa-circle-plus"></i>
+
+                เพิ่มรายการ
+
+            </h3>
+
+            <p>
+
+                บันทึกรายรับหรือรายจ่ายใหม่
+
+            </p>
+
+            <button
+                class="btn-primary mt-2"
+                id="addTransactionBtn">
+
+                เพิ่มรายการ
+
+            </button>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h3>
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                รายงาน
+
+            </h3>
+
+            <p>
+
+                ดูสรุปรายเดือนและกราฟ
+
+            </p>
+
+            <button
+                class="btn-outline mt-2">
+
+                เปิดรายงาน
+
+            </button>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h3>
+
+                <i class="fa-solid fa-user"></i>
+
+                โปรไฟล์
+
+            </h3>
+
+            <p id="userEmail">
+
+                กำลังโหลด...
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Transactions -->
+
+<section class="mt-3">
+
+    <div class="dashboard-card">
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:20px;
+                flex-wrap:wrap;
+                gap:16px;
+            ">
+
+            <h3>
+
+                รายการล่าสุด
+
+            </h3>
+
+            <input
+                type="text"
+                id="searchInput"
+                class="form-input"
+                placeholder="ค้นหารายการ..."
+                style="max-width:280px;">
+
+        </div>
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>วันที่</th>
+
+                    <th>รายการ</th>
+
+                    <th>ประเภท</th>
+
+                    <th>จำนวนเงิน</th>
+
+                    <th>จัดการ</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="transactionTable">
+
+                <tr>
+
+                    <td colspan="5"
+                        style="text-align:center;">
+
+                        ยังไม่มีข้อมูล
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+<!-- Add Transaction Modal -->
+
+<div id="transactionModal"
+     class="modal">
+
+    <div class="modal-content">
+
+        <h2 class="mb-2">
+
+            เพิ่มรายการ
+
+        </h2>
+
+        <form id="transactionForm">
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    ประเภท
+
+                </label>
+
+                <select
+                    id="type"
+                    class="form-select">
+
+                    <option value="income">
+
+                        รายรับ
+
+                    </option>
+
+                    <option value="expense">
+
+                        รายจ่าย
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    รายการ
+
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    class="form-input"
+                    placeholder="เช่น เงินเดือน">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    จำนวนเงิน
+
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    class="form-input"
+                    placeholder="0.00">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    วันที่
+
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    class="form-input">
+
+            </div>
+
+            <div
+                style="
+                    display:flex;
+                    gap:12px;
+                    justify-content:flex-end;
+                ">
+
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="closeModal('transactionModal')">
+
+                    ยกเลิก
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-primary">
+
+                    บันทึก
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Back To Top -->
+
+<button id="backToTop"
+        class="back-to-top"
+        aria-label="Back to Top">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</button>
+
+<!-- Footer -->
+
+<footer>
+
+    <div class="container">
+
+        <p>
+
+            © 2026 PayNest Premium
+
+        </p>
+
+    </div>
+
+</footer>
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script src="firebase.js"></script>
+
+<!-- JavaScript -->
+
+<script src="assets/js/app.js"></script>
+
+<script src="assets/js/auth.js"></script>
+
+<script src="assets/js/dashboard.js"></script>
+
+</body>
+
+</html>
