@@ -147,3 +147,107 @@ if(loginForm){
     });
 
 }
+/* ===================================
+   Register
+=================================== */
+
+const registerForm = document.getElementById("registerForm");
+
+const confirmPasswordInput =
+    document.getElementById("confirmPassword");
+
+const toggleConfirmPassword =
+    document.getElementById("toggleConfirmPassword");
+
+/* ---------- Toggle Confirm Password ---------- */
+
+if(toggleConfirmPassword && confirmPasswordInput){
+
+    toggleConfirmPassword.addEventListener("click",()=>{
+
+        const isPassword =
+            confirmPasswordInput.type === "password";
+
+        confirmPasswordInput.type =
+            isPassword ? "text" : "password";
+
+        toggleConfirmPassword.innerHTML = isPassword
+            ? '<i class="fa-solid fa-eye-slash"></i>'
+            : '<i class="fa-solid fa-eye"></i>';
+
+    });
+
+}
+
+/* ---------- Register Submit ---------- */
+
+if(registerForm){
+
+    registerForm.addEventListener("submit",(event)=>{
+
+        event.preventDefault();
+
+        const fullname =
+            document.getElementById("fullname").value.trim();
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
+        const confirmPassword =
+            confirmPasswordInput.value;
+
+        if(fullname.length < 2){
+
+            PayNest.showToast(
+                "กรุณากรอกชื่อ-นามสกุล",
+                "warning"
+            );
+
+            return;
+
+        }
+
+        if(!isValidEmail(email)){
+
+            PayNest.showToast(
+                "รูปแบบอีเมลไม่ถูกต้อง",
+                "danger"
+            );
+
+            return;
+
+        }
+
+        if(password.length < 6){
+
+            PayNest.showToast(
+                "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+                "warning"
+            );
+
+            return;
+
+        }
+
+        if(password !== confirmPassword){
+
+            PayNest.showToast(
+                "รหัสผ่านไม่ตรงกัน",
+                "danger"
+            );
+
+            return;
+
+        }
+
+        PayNest.showToast(
+            "ข้อมูลถูกต้อง พร้อมเชื่อม Firebase",
+            "success"
+        );
+
+    });
+
+}
