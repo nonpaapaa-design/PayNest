@@ -543,4 +543,8 @@ footer{
     margin-top:40px;
 
 }
+footer{
 
+    background:var(--surface);
+
+}
